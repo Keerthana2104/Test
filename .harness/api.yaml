@@ -3,3 +3,31 @@ service:
   identifier: api
   orgIdentifier: default
   projectIdentifier: default_project
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: depl
+            type: HelmChart
+            spec:
+              store:
+                type: Harness
+                spec:
+                  files:
+                    - /deployment.yaml
+              helmVersion: V3
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+              fetchHelmChartMetadata: false
+      artifacts:
+        primary:
+          primaryArtifactRef: <+input>
+          sources:
+            - spec:
+                connectorRef: account.harnessImage
+                imagePath: nginx
+                tag: <+input>
+                digest: ""
+              identifier: test
+              type: DockerRegistry
+    type: Kubernetes
